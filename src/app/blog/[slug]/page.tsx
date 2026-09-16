@@ -1,11 +1,30 @@
 import { blogPosts } from '@/lib/data';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import ArticleReaderView from '@/components/ArticleReaderView';
+import type { Metadata } from 'next';
 
 export function generateStaticParams() {
   return blogPosts.map((p) => ({
     slug: p.slug,
   }));
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = blogPosts.find((p) => p.slug === params.slug);
+  if (!post) {
+    return { title: 'Artigo não encontrado — Caverna do Estoico' };
+  }
+  return {
+    title: `${post.title} — Caverna do Estoico`,
+    description: post.subtitle || post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.subtitle,
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+    },
+  };
 }
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
@@ -15,17 +34,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     notFound();
   }
 
-  return (
-    <div className="max-w-3xl mx-auto">
-      <Link href="/blog" className="text-neutral-400 hover:text-white mb-8 inline-block transition-colors">
-        &larr; Voltar para o Blog
-      </Link>
-      <article>
-        <h1 className="text-4xl md:text-5xl font-serif font-bold mb-8">{post.title}</h1>
-        <div className="bg-card border border-border p-8 rounded-2xl">
-          <p className="text-lg leading-relaxed text-neutral-200 whitespace-pre-wrap">{post.content}</p>
-        </div>
-      </article>
-    </div>
-  );
+  // Related posts from same theme or others
+  const relatedPosts = blogPosts
+    .filter((p) => p.slug !== post.slug)
+    .slice(0, 2);
+
+  return <ArticleReaderView post={post} relatedPosts={relatedPosts} />;
 }

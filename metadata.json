@@ -1,0 +1,6 @@
+{
+  "name": "Caverna do Estoico",
+  "description": "Refúgio de sabedoria estoica, reflexões práticas, comunidade e curadoria de livros filosóficos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

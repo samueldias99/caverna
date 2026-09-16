@@ -4,15 +4,79 @@
 
 @layer base {
   :root {
-    --background: #050505;
-    --foreground: #f3f4f6;
-    --card: rgba(0, 0, 0, 0.4);
-    --card-foreground: #f3f4f6;
-    --border: rgba(255, 255, 255, 0.1);
+    /* Modo Mármore / Pergaminho Clássico (Light) */
+    --background: #f8f6f0;
+    --background-alt: #f1ede4;
+    --foreground: #1c1917;
+    --foreground-muted: #57534e;
+    --card: rgba(255, 255, 255, 0.85);
+    --card-hover: rgba(255, 255, 255, 0.95);
+    --card-foreground: #1c1917;
+    --border: rgba(41, 37, 36, 0.12);
+    --border-accent: rgba(184, 144, 32, 0.35);
+    --primary: #9b722b;
+    --primary-hover: #b88628;
+    --bronze: #85581a;
+    --stone-pill: #e7e2d6;
+  }
+
+  .dark {
+    /* Modo Caverna / Basalto Noturno (Dark) */
+    --background: #09090b;
+    --background-alt: #121216;
+    --foreground: #f4f4f5;
+    --foreground-muted: #a1a1aa;
+    --card: rgba(22, 22, 28, 0.75);
+    --card-hover: rgba(30, 30, 38, 0.9);
+    --card-foreground: #f4f4f5;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-accent: rgba(212, 175, 55, 0.3);
+    --primary: #d4af37;
+    --primary-hover: #f59e0b;
+    --bronze: #caa048;
+    --stone-pill: #1f1f26;
   }
 }
 
 body {
   color: var(--foreground);
   background-color: var(--background);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Classical library & architectural accents */
+.stoic-column-border {
+  border-left: 2px solid var(--border-accent);
+  border-right: 2px solid var(--border-accent);
+}
+
+.stoic-quote-quote {
+  font-family: var(--font-playfair), serif;
+  line-height: 1.45;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(160, 140, 90, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 140, 90, 0.45);
+}
+
+/* Subtle marble texture overlay */
+.marble-texture {
+  background-image: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+}
+
+.dark .marble-texture {
+  background-image: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
 }

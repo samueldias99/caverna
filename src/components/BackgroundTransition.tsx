@@ -14,30 +14,30 @@ const bgMap: Record<string, string> = {
 export default function BackgroundTransition() {
   const pathname = usePathname();
   
-  // Default to cave if not found
   let bgImage = bgMap[pathname];
   if (!bgImage) {
     bgImage = '/bg-cave.png';
   }
 
   return (
-    <div className="fixed inset-0 z-[-20] overflow-hidden bg-black pointer-events-none">
+    <div className="fixed inset-0 z-[-20] overflow-hidden pointer-events-none transition-colors duration-500">
       <AnimatePresence initial={false}>
         <motion.div
           key={bgImage}
           className="absolute inset-0"
           initial={{ opacity: 0, scale: 1, filter: "blur(8px)" }}
-          animate={{ opacity: 1, scale: 1.03, filter: "blur(0px)" }}
-          exit={{ opacity: 0, scale: 1.05, filter: "blur(12px)" }}
+          animate={{ opacity: 1, scale: 1.02, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 1.04, filter: "blur(8px)" }}
           transition={{ duration: 1.2, ease: "easeInOut" }}
         >
           <Image
             src={bgImage}
-            alt="Cinematic Background"
+            alt="Atmosfera Clássica Estoica"
             fill
-            quality={90}
+            quality={85}
             priority
-            className={`object-cover opacity-100 ${
+            referrerPolicy="no-referrer"
+            className={`object-cover ${
               bgImage === '/bg-cave.png' 
                 ? 'object-[80%_bottom] md:object-[80%_100%]' 
                 : 'object-[center_10%] md:object-[center_15%]'
@@ -45,7 +45,12 @@ export default function BackgroundTransition() {
           />
         </motion.div>
       </AnimatePresence>
-      <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/90 via-transparent to-black/30 z-10 pointer-events-none" />
+      
+      {/* Dynamic overlays for dark and light modes */}
+      {/* Dark mode overlay */}
+      <div className="absolute inset-0 bg-background/85 dark:bg-black/75 bg-gradient-to-t from-background via-background/60 to-background/40 z-10 pointer-events-none transition-colors duration-300" />
+      {/* Classical ambient grain */}
+      <div className="absolute inset-0 marble-texture z-10 pointer-events-none" />
     </div>
   );
 }

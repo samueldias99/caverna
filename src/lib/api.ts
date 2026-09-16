@@ -1,8 +1,8 @@
-import { Quote, fallbackQuotes } from './data';
+import { Quote, quotes } from './data';
+
+export const fallbackQuotes: Quote[] = quotes;
 
 export async function fetchRandomQuote(): Promise<Quote> {
-  // Simulating an API call delay for realism
-  await new Promise(resolve => setTimeout(resolve, 500));
-  const randomIndex = Math.floor(Math.random() * fallbackQuotes.length);
-  return fallbackQuotes[randomIndex];
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  return quotes[randomIndex];
 }
