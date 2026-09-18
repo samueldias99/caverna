@@ -20,6 +20,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import QuoteShareModal from '@/components/QuoteShareModal';
+import GoogleLoginModal from '@/components/GoogleLoginModal';
 
 export default function PerfilPage() {
   const {
@@ -34,7 +35,6 @@ export default function PerfilPage() {
     toggleReadingListBook,
     toggleTheme,
     setFontSize,
-    loginWithProvider,
     logout,
     requestNotificationPermission
   } = useReaderState();
@@ -53,9 +53,18 @@ export default function PerfilPage() {
       {/* Header Profile Bar */}
       <div className="rounded-2xl border border-border-accent bg-card/85 backdrop-blur-sm p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-md">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-stone-pill border border-border-accent flex items-center justify-center text-3xl font-serif text-primary shadow-inner shrink-0 select-none">
-            {user.name[0]}
-          </div>
+          {user.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img 
+              src={user.avatarUrl} 
+              alt={user.name} 
+              className="w-16 h-16 rounded-2xl object-cover border border-border-accent shadow-inner shrink-0" 
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-2xl bg-stone-pill border border-border-accent flex items-center justify-center text-3xl font-serif text-primary shadow-inner shrink-0 select-none">
+              {user.name[0] || 'L'}
+            </div>
+          )}
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
@@ -68,7 +77,7 @@ export default function PerfilPage() {
               )}
             </div>
             <p className="text-xs text-foreground-muted mt-1">
-              Praticante da Stoa • Membro desde {user.joinedDate}
+              {user.email ? `${user.email} • ` : ''}Praticante da Stoa • Membro desde {user.joinedDate}
             </p>
           </div>
         </div>
@@ -421,45 +430,11 @@ export default function PerfilPage() {
         </div>
       )}
 
-      {/* Login modal simulation */}
-      {showLoginModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm bg-background border border-border-accent rounded-2xl p-6 space-y-5 shadow-2xl">
-            <div className="text-center space-y-1">
-              <span className="text-2xl font-serif">🏛️</span>
-              <h3 className="font-serif font-bold text-xl text-foreground">
-                Entrar na Caverna do Estoico
-              </h3>
-              <p className="text-xs text-foreground-muted">
-                Sincronize suas anotações do diário e livros salvos em qualquer dispositivo.
-              </p>
-            </div>
-
-            <div className="space-y-2.5 pt-2">
-              <button
-                onClick={() => { loginWithProvider('google'); setShowLoginModal(false); }}
-                className="w-full py-2.5 px-4 rounded-xl border border-border bg-card hover:bg-card-hover text-xs font-medium text-foreground flex items-center justify-center gap-2 transition-colors"
-              >
-                <span>Entrar com Google</span>
-              </button>
-
-              <button
-                onClick={() => { loginWithProvider('apple'); setShowLoginModal(false); }}
-                className="w-full py-2.5 px-4 rounded-xl border border-border bg-card hover:bg-card-hover text-xs font-medium text-foreground flex items-center justify-center gap-2 transition-colors"
-              >
-                <span>Entrar com Apple</span>
-              </button>
-            </div>
-
-            <button
-              onClick={() => setShowLoginModal(false)}
-              className="w-full text-center text-xs text-foreground-muted hover:text-foreground pt-2"
-            >
-              Continuar como Leitor Convidado
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Google & OAuth Login modal */}
+      <GoogleLoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
 
       {/* Share Quote Modal */}
       {shareQuote && (

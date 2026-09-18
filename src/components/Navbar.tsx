@@ -21,7 +21,7 @@ import SearchModal from './SearchModal';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { settings, toggleTheme, favoriteQuoteIds, savedArticleSlugs } = useReaderState();
+  const { settings, toggleTheme, favoriteQuoteIds, savedArticleSlugs, user } = useReaderState();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -133,12 +133,21 @@ export default function Navbar() {
             {/* Personal Panel / Sanctuary */}
             <Link
               href="/perfil"
-              className={`p-2 rounded-lg border border-border bg-card hover:bg-card-hover hover:border-primary/40 text-foreground-muted hover:text-foreground transition-colors relative ${
+              className={`p-1.5 sm:p-2 rounded-lg border border-border bg-card hover:bg-card-hover hover:border-primary/40 text-foreground-muted hover:text-foreground transition-colors relative flex items-center gap-1.5 ${
                 isActive('/perfil') || isActive('/diario') ? 'text-primary border-primary/40 bg-primary/10' : ''
               }`}
-              title="Área Pessoal & Diário Estoico"
+              title={user.provider !== 'guest' ? `Perfil de ${user.name}` : "Área Pessoal & Diário Estoico"}
             >
-              <BookMarked className="w-4 h-4" />
+              {user.provider !== 'guest' && user.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img 
+                  src={user.avatarUrl} 
+                  alt={user.name} 
+                  className="w-5 h-5 rounded-full object-cover border border-primary/40" 
+                />
+              ) : (
+                <BookMarked className="w-4 h-4" />
+              )}
               {totalSaved > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-black text-[10px] font-bold rounded-full flex items-center justify-center">
                   {totalSaved > 9 ? '9+' : totalSaved}

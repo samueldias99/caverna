@@ -61,7 +61,8 @@ interface ReaderContextType {
   setFontSize: (size: 'normal' | 'large' | 'larger') => void;
   updateSettings: (partial: Partial<ReaderSettings>) => void;
 
-  loginWithProvider: (provider: 'google' | 'apple' | 'email', name?: string, email?: string) => void;
+  loginWithProvider: (provider: 'google' | 'apple' | 'email', name?: string, email?: string, avatarUrl?: string) => void;
+  updateUser: (profile: Partial<UserProfile>) => void;
   logout: () => void;
   requestNotificationPermission: () => Promise<boolean>;
 }
@@ -227,17 +228,26 @@ export function ReaderProvider({ children }: { children: React.ReactNode }) {
     setSettings(prev => ({ ...prev, ...partial }));
   };
 
-  const loginWithProvider = (provider: 'google' | 'apple' | 'email', name?: string, email?: string) => {
+  const loginWithProvider = (
+    provider: 'google' | 'apple' | 'email', 
+    name?: string, 
+    email?: string, 
+    avatarUrl?: string
+  ) => {
     setUser({
       id: 'user_' + Date.now(),
       name: name || (provider === 'google' ? 'Praticante Google' : provider === 'apple' ? 'Praticante Apple' : 'Estudante da Stoa'),
       email: email || (provider === 'google' ? 'leitor@gmail.com' : 'leitor@icloud.com'),
-      avatarUrl: provider === 'google' 
+      avatarUrl: avatarUrl || (provider === 'google' 
         ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
-        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
+        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80'),
       provider,
       joinedDate: new Date().toLocaleDateString('pt-BR')
     });
+  };
+
+  const updateUser = (profile: Partial<UserProfile>) => {
+    setUser(prev => ({ ...prev, ...profile }));
   };
 
   const logout = () => {
@@ -292,6 +302,7 @@ export function ReaderProvider({ children }: { children: React.ReactNode }) {
         setFontSize,
         updateSettings,
         loginWithProvider,
+        updateUser,
         logout,
         requestNotificationPermission
       }}
